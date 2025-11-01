@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Privacy Policy</title>
+  <meta name="robots" content="noindex" />
+  <script>
+    (function () {
+      // Idiomas soportados
+      var supported = ["es", "ca", "en", "fr", "it", "de", "pt"];
+
+      function pickLang() {
+        var prefs = [];
+        if (navigator.languages && navigator.languages.length) {
+          prefs = navigator.languages.slice(); // p.ej. ["es-ES","en-US","ca-ES"]
+        } else if (navigator.language) {
+          prefs = [navigator.language];        // p.ej. "es-ES"
+        }
+
+        // Normaliza y prioriza: añade el tag completo y su base (es-419 -> es)
+        var seen = new Set();
+        var normalized = [];
+        for (var i = 0; i < prefs.length; i++) {
+          var tag = (prefs[i] || "").toString().trim().toLowerCase();
+          if (!tag) continue;
+          var base = tag.split("-")[0];
+          [tag, base].forEach(function (code) {
+            if (code && !seen.has(code)) { seen.add(code); normalized.push(code); }
+          });
+        }
+
+        // Asegura fallback a inglés
+        normalized.push("en");
+
+        // Devuelve el primer idioma soportado que encaje (exacto o por base)
+        for (var j = 0; j < normalized.length; j++) {
+          var code = normalized[j];
+          for (var k = 0; k < supported.length; k++) {
+            var sup = supported[k];
+            if (code === sup || code.startsWith(sup + "-")) {
+              return sup;
+            }
+          }
+        }
+        return "en";
+      }
+
+      var lang = pickLang();
+      var target = "privacy_policy_" + lang + ".html";
+
+      // Evita bucles si ya estás en la página destino
+      var current = (window.location.pathname.split("/").pop() || "").toLowerCase();
+      if (current !== target.toLowerCase()) {
+        // Conserva querystring y hash; replace() no añade entrada al historial
+        window.location.replace(target + window.location.search + window.location.hash);
+      } else {
+        document.documentElement.classList.add("no-redirect");
+      }
+    })();
+  </script>
+  <style>
+    /* Opcional: estilo mínimo si por algún motivo no se redirige */
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 2rem; }
+    .hint { opacity: .7; }
+  </style>
+</head>
+<body>
+  <noscript>
+    <p>Esta página redirige según el idioma del navegador. Activa JavaScript o elige tu idioma:</p>
+    <ul>
+      <li><a href="privacy_policy_es.html">Español</a></li>
+      <li><a href="privacy_policy_ca.html">Català</a></li>
+      <li><a href="privacy_policy_en.html">English</a></li>
+      <li><a href="privacy_policy_fr.html">Français</a></li>
+      <li><a href="privacy_policy_it.html">Italiano</a></li>
+      <li><a href="privacy_policy_de.html">Deutsch</a></li>
+      <li><a href="privacy_policy_pt.html">Português</a></li>
+    </ul>
+    <p class="hint">Si tu idioma no está en la lista, usa la versión en inglés.</p>
+  </noscript>
+</body>
+</html>
